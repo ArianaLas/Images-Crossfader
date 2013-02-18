@@ -18,11 +18,14 @@
 			}
 			$this->name = $name;
 			$this->path = $root . "sliders/" . $name;
+			$umask = umask();
+			umask(0076);
 			if (!is_dir($this->path)) {
 				if (!@mkdir($this->path, 0777, true)) {
 					throw new SliderException("Unable to create directory " . $this->path);
 				}
 			}
+			umask($umask);
 		}
 
 		public function addImage($path, $alt, $new_name = null, $title = null, $crop_pos = Image::TOP) {
@@ -48,7 +51,6 @@
 				if ($n == $new_name) {
 					if ($image["crop_pos"] != $crop_pos) {
 						++$i;
-						break;
 					} else { // exactly the same
 						$flag = true;
 					}
@@ -85,7 +87,8 @@
 
 		public function getHtmlCode() {
 			$string = '<section id="' . $this->name . '">' . "\n";
-			foreach ($this->images as $image) {
+			for ($i = count($this->images) - 1; $i >= 0; --$i) {
+				$image = $this->images[$i];
 				 $string .= "\t" . '<img src="' . $this->path . '/' . $image["name"] . '" alt="' . $image["alt"] . '" ' . ($image["title"] ? 'title="' . $image["title"] . '" /' : '/>') . "\n";
 			}
 			$string .= "</section>" . "\n";
@@ -103,7 +106,8 @@
 			$string .= "\t" . "height: " . $this->height . "px;" . "\n";
 			$string .= "}" . "\n\n";
 			$string .= "#" . $this->name . " > img {" . "\n";
-			foreach (array("-moz-", "-webkit-", "-ms-", "") as $prefix) {
+			$string .= "\t" . "position: absolute;" . "\n";
+			foreach (array("-moz-", "-webkit-", "-o-",  "-ms-", "") as $prefix) {
 				$string .= "\t" . $prefix . "animation-name: " . $this->name . "_fade;" . "\n";
 				$string .= "\t" . $prefix . "animation-timing-function: ease-in-out;" . "\n";
 				$string .= "\t" . $prefix . "animation-iteration-count: infinite;" . "\n";
@@ -112,13 +116,14 @@
 			$string .= "}" . "\n\n";
 			for ($i = 0; $i < $amount; ++$i) {
 				$string .= "#" . $this->name . " > img:nth-child(" . ($i + 1) . ") {" . "\n";
-				$string .= "\t" . "-moz-animation-delay: " . $i * $delay . "s;" . "\n";
-				$string .= "\t" . "-webkit-animation-delay: " . $i * $delay . "s;" . "\n";
-				$string .= "\t" . "-ms-animation-delay: " . $i * $delay . "s;" . "\n";
-				$string .= "\t" . "animation-delay: " . $i * $delay . "s;" . "\n";
+				$string .= "\t" . "-moz-animation-delay: " . ($duration - $delay - $i * $delay) . "s;" . "\n";
+				$string .= "\t" . "-webkit-animation-delay: " . ($duration - $delay - $i * $delay) . "s;" . "\n";
+				$string .= "\t" . "-o-animation-delay: " . ($duration - $delay - $i * $delay) . "s;" . "\n";
+				$string .= "\t" . "-ms-animation-delay: " . ($duration - $delay - $i * $delay) . "s;" . "\n";
+				$string .= "\t" . "animation-delay: " . ($duration - $delay - $i * $delay) . "s;" . "\n";
 				$string .= "}" . "\n\n";
 			}
-			foreach (array("-moz-", "-webkit-", "-ms-", "") as $prefix) {
+			foreach (array("-moz-", "-webkit-", "-o-",  "-ms-", "") as $prefix) {
 				$string .= "@" . $prefix . "keyframes " . $this->name . "_fade {" . "\n";
 				$string .= "\t" . "0% {" . "\n";
 				$string .= "\t\t" . "opacity: 1;" . "\n";

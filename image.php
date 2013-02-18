@@ -24,6 +24,8 @@
 		}
 
 		public function save($path = NULL) {
+			$umask = umask();
+			umask(0073);
 			if ($path == NULL) {
 				$path = $this->path;
 			//TODO: add prefix
@@ -38,6 +40,7 @@
 				imagejpeg($this->image, $path);
 			}
 			//TODO: another types of image
+			umask($umask);
 		}
 
 		public function width() {
