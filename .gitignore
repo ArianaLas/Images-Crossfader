@@ -4,3 +4,5 @@
 *.png
 sliders/
 test.php
+*.css
+index.php
