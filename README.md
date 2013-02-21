@@ -8,8 +8,10 @@ PHP library for generating pure CSS3 gallery with smooth crossfading between as 
 * create an object of Slider class
 	* in constructor set width and height of slider
 	* third argument is name of your slider (it will be id parameter in HTML code)
+	* border (optional, default none, example: 10px solid #000000)
 	* last argument is optional - that is where slider.php and image.php is placed (default ./)
 * add as many images as you want
+	* PLEASE do not use "-" in source names and new names of images
 	* it should be .jpg or .jpeg extensions (in the future there will be more extensions)
 	* arguments are:
 		* path - full path of source image (with extension)
@@ -31,17 +33,20 @@ PHP library for generating pure CSS3 gallery with smooth crossfading between as 
 
 ## Example
 
+Demo: http://diversipes.com/demo/
+
+Demo source:
 ```php
 <?php
 	include("slider.php");
-	$slider = new Slider(800, 300, "header");
-	$slider->addImage("octocat.jpg", "octocat", "octocat-resized.jpg"); 
-	$slider->addImage("octocat.jpg", "octocat", "octocat-resized.jpg", null, Image::BOTTOM); 
+	$slider = new Slider(800, 300, "header", "10px solid #000000");
+	$slider->addImage("octocat.jpg", "octocat"); 
+	$slider->addImage("octocat.jpg", "octocat", null, null, Image::BOTTOM); 
 	$slider->addImage("tux.jpg", "tux", null, "This is tux"); 
-	$slider->addImage("wilber.jpg", "wilber", null, null, Image::TOP); 
+	$slider->addImage("wilber.jpg", "wilber"); 
 	//optional:
-	$slider->setImageDuration("3s");
-	$slider->setFadeTime("500ms");
+	$slider->setImageDuration("3");
+	$slider->setFadeTime("0.5");
 ?>
 <!DOCTYPE html>
 <head>

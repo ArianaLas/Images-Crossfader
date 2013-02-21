@@ -4,9 +4,10 @@
 
 	class Slider {
 
-		public function __construct($width, $height, $name, $root = "./") {
+		public function __construct($width, $height, $name, $border = null, $root = "./") {
 			$this->width = $width;
 			$this->height = $height;
+			$this->border = $border;
 			if (substr($root, -1) != "/") {
 				$root .= "/";
 			}
@@ -89,7 +90,7 @@
 			$string = '<section id="' . $this->name . '">' . "\n";
 			for ($i = count($this->images) - 1; $i >= 0; --$i) {
 				$image = $this->images[$i];
-				 $string .= "\t" . '<img src="' . $this->path . '/' . $image["name"] . '" alt="' . $image["alt"] . '" ' . ($image["title"] ? 'title="' . $image["title"] . '" /' : '/>') . "\n";
+				 $string .= "\t" . '<img src="' . $this->path . '/' . $image["name"] . '" alt="' . $image["alt"] . '" ' . ($image["title"] ? 'title="' . $image["title"] . '" />' : '/>') . "\n";
 			}
 			$string .= "</section>" . "\n";
 			return $string;
@@ -101,6 +102,9 @@
 			$delay = $duration / $amount;
 
 			$string = "#" . $this->name . " {" . "\n";
+			if ($this->border != null) {
+				$string .= "border: " . $this->border . ";";
+			}
 			$string .= "\t" . "position: relative;" . "\n";
 			$string .= "\t" . "width: " . $this->width . "px;" . "\n";
 			$string .= "\t" . "height: " . $this->height . "px;" . "\n";
@@ -162,5 +166,6 @@
 		private $path;
 		private $name;
 		private $root;
+		private $border;
 	}
 ?>
