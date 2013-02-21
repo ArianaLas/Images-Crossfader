@@ -22,6 +22,8 @@ PHP library for generating pure CSS3 gallery with smooth crossfading between as 
 			* Image::BOTTOM
 	* if you don't set new_name argument, images are numbered (for example name-1.jpg)
 	* library do not overwrite existing files - that's why is faster, but if you want 3 images with different crop position from one source image (so with the same image name) it is considered (for example name.jpg, name-1.jpg, name-2.jpg)
+* set time of presentation one image (optional, default is 5s)
+* set time of fade (optional, default is 1s)
 * generate CSS code and HTML code (look at example)
 	* there is posibility to generate CSS file and place it in <link rel="stylesheet" href="HERE NAME OF GENERATED CSS FILE" type="text/css" /> in HTML code
 
@@ -35,6 +37,9 @@ PHP library for generating pure CSS3 gallery with smooth crossfading between as 
 	$slider->addImage("octocat.jpg", "octocat", "octocat-resized.jpg", null, Image::BOTTOM); 
 	$slider->addImage("tux.jpg", "tux", null, "This is tux"); 
 	$slider->addImage("wilber.jpg", "wilber", null, null, Image::TOP); 
+	//optional:
+	$slider->setImageDuration("3s");
+	$slider->setFadeTime("500ms");
 ?>
 <!DOCTYPE html>
 <head>
