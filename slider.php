@@ -28,7 +28,7 @@
 			umask($umask);
 		}
 
-		public function addImage($path, $alt, $new_name = null, $title = null, $crop_pos = Image::TOP) {
+		public function addImage($path, $alt, $new_name = null, $title = null, $crop_pos = Image::MIDDLE) {
 			if (!file_exists($path)) {
 				throw new SliderException("File " . $path . " does not exists");
 			}

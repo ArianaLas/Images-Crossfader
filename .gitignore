@@ -6,3 +6,5 @@ sliders/
 test.php
 *.css
 index.php
+generator.php
+steps/
