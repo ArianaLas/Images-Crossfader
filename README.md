@@ -25,7 +25,9 @@ PHP library for generating pure CSS3 gallery with smooth crossfading between as 
 * set time of presentation one image (optional, default is 5s)
 * set time of fade (optional, default is 1s)
 * generate CSS code and HTML code (look at example)
-	* there is posibility to generate CSS file and place it in <link rel="stylesheet" href="HERE NAME OF GENERATED CSS FILE" type="text/css" /> in HTML code
+	* there is posibility to generate CSS file and place it in 
+	\<link rel="stylesheet" href="HERE NAME OF GENERATED CSS FILE" type="text/css" /\> 
+	in HTML code
 
 ## Example
 
