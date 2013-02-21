@@ -4,10 +4,9 @@
 
 	class Slider {
 
-		public function __construct($width, $height, $name, $border = null, $root = "./") {
+		public function __construct($width, $height, $name, $root = "./") {
 			$this->width = $width;
 			$this->height = $height;
-			$this->border = $border;
 			if (substr($root, -1) != "/") {
 				$root .= "/";
 			}
@@ -27,6 +26,10 @@
 				}
 			}
 			umask($umask);
+		}
+
+		public function setBorder($border) {
+			$this->border = $border;
 		}
 
 		public function addImage($path, $alt, $new_name = null, $title = null, $crop_pos = Image::MIDDLE) {
@@ -166,6 +169,6 @@
 		private $path;
 		private $name;
 		private $root;
-		private $border;
+		private $border = null;
 	}
 ?>
