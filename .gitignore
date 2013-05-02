@@ -8,3 +8,5 @@ test.php
 index.php
 generator.php
 steps/
+tests/
+doc/

@@ -3,7 +3,17 @@
 	class SliderException extends Exception {}
 
 	class Slider {
-
+		
+		/** Default constructor
+		* @param $width - slider width
+		* @param $height - slider height
+		* @param $name - slide name, id of new element
+		* @param $root - slider internal directory prefix
+		*
+		* @throw SliderException if a dangerous name given
+		* @throw SliderException if there was an error while
+		* creating new directory
+		*/
 		public function __construct($width, $height, $name, $root = "./") {
 			$this->width = $width;
 			$this->height = $height;
@@ -28,11 +38,15 @@
 			umask($umask);
 		}
 
+		/** Set slider element border
+		* @param $border - CSS value for border
+		* @return void
+		*/
 		public function setBorder($border) {
 			$this->border = $border;
 		}
 
-		public function addImage($path, $alt, $new_name = null, $title = null, $crop_pos = Image::MIDDLE) {
+		public function addImage($path, $alt, $figcaption = null, $link = null, $new_name = null, $title = null, $crop_pos = Image::MIDDLE) {
 			if (!file_exists($path)) {
 				throw new SliderException("File " . $path . " does not exists");
 			}
@@ -71,7 +85,7 @@
 				$this->save($path, $internal, $crop_pos);
 			}
 			if ($flag !== true) {
-				array_push($this->images, array("name" => $new_name, "alt" => $alt, "title" => $title, "crop_pos" => $crop_pos));
+				array_push($this->images, array("name" => $new_name, "alt" => $alt, "figcaption" => $figcaption, "link" => $link, "title" => $title, "crop_pos" => $crop_pos));
 			}
 		}
 
@@ -93,7 +107,20 @@
 			$string = '<section id="' . $this->name . '">' . "\n";
 			for ($i = count($this->images) - 1; $i >= 0; --$i) {
 				$image = $this->images[$i];
-				 $string .= "\t" . '<img src="' . $this->path . '/' . $image["name"] . '" alt="' . $image["alt"] . '" ' . ($image["title"] ? 'title="' . $image["title"] . '" />' : '/>') . "\n";
+				$string .= "\t" . '<figure>' . "\n";
+				if ($image["link"] != null) {
+					$string .= "\t\t" . '<a href="' . $image["link"] . '">' . "\n";
+					$string .= "\t\t\t" . '<img src="' . $this->path . '/' . $image["name"] . '" alt="' . $image["alt"] . '" ' . ($image["title"] ? 'title="' . $image["title"] . '" />' : '/>') . "\n";
+					$string .= "\t\t" . '</a>' . "\n";
+				} else {
+					$string .= "\t\t" . '<img src="' . $this->path . '/' . $image["name"] . '" alt="' . $image["alt"] . '" ' . ($image["title"] ? 'title="' . $image["title"] . '" />' : '/>') . "\n";
+				}
+				if ($image["figcaption"] != null) {
+					$string .= "\t\t" . '<figcaption>' . "\n";
+					$string .= "\t\t\t" . $image["figcaption"] . "\n";
+					$string .= "\t\t" . '</figcaption>' . "\n";
+				}
+				$string .= "\t" . '</figure>' . "\n";
 			}
 			$string .= "</section>" . "\n";
 			return $string;
@@ -112,8 +139,10 @@
 			$string .= "\t" . "width: " . $this->width . "px;" . "\n";
 			$string .= "\t" . "height: " . $this->height . "px;" . "\n";
 			$string .= "}" . "\n\n";
-			$string .= "#" . $this->name . " > img {" . "\n";
+			$string .= "#" . $this->name . " > figure {" . "\n";
 			$string .= "\t" . "position: absolute;" . "\n";
+			$string .= "\t" . "margin: 0;" . "\n";
+			$string .= "\t" . "height: " . $this->height . "px;" . "\n";
 			foreach (array("-moz-", "-webkit-", "-o-",  "-ms-", "") as $prefix) {
 				$string .= "\t" . $prefix . "animation-name: " . $this->name . "_fade;" . "\n";
 				$string .= "\t" . $prefix . "animation-timing-function: ease-in-out;" . "\n";
@@ -122,7 +151,7 @@
 			}
 			$string .= "}" . "\n\n";
 			for ($i = 0; $i < $amount; ++$i) {
-				$string .= "#" . $this->name . " > img:nth-child(" . ($i + 1) . ") {" . "\n";
+				$string .= "#" . $this->name . " > figure:nth-child(" . ($i + 1) . ") {" . "\n";
 				$string .= "\t" . "-moz-animation-delay: " . ($duration - $delay - $i * $delay) . "s;" . "\n";
 				$string .= "\t" . "-webkit-animation-delay: " . ($duration - $delay - $i * $delay) . "s;" . "\n";
 				$string .= "\t" . "-o-animation-delay: " . ($duration - $delay - $i * $delay) . "s;" . "\n";
@@ -149,6 +178,13 @@
 				$string .= "\t" . "}" . "\n";
 				$string .= "}" . "\n\n";
 			}
+			$string .= "#" . $this->name . " > figure > figcaption {" . "\n";
+			$string .= "\t" . "position: absolute;" . "\n";
+			$string .= "\t" . "bottom: 0;" . "\n";
+			$string .= "\t" . "display: block;" . "\n";
+			$string .= "\t" . "width: " . $this->width . "px;" . "\n";
+			$string .= "\t" . "" . "\n";
+			$string .= "}" . "\n";
 			return $string;
 		}
 
